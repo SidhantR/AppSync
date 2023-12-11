@@ -1,0 +1,12 @@
+type User {
+  userId: ID!
+  username: String
+  email: String
+}
+type Query {
+  hello: String
+  getUser(userId: ID!): User
+}
+schema {
+  query: Query
+}

@@ -1,0 +1,97 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AppSync API
+
+Parameters:
+  EnvironmentType:
+    Description: An environment type Develop/QA/Production.
+    Type: String
+    AllowedValues: [ dev, qa, stg, beta, prd ]
+    Default: dev
+
+  AppSyncApiName:
+    Description: The GraphQL Api Name.
+    Type: String
+    Default: MyGraphQLApi
+
+Resources:
+  #*********** AppSync GraphQL API *********
+  GraphQLApi:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      Name: MyGraphQLApi
+      AuthenticationType: API_KEY
+ 
+ #*********** AppSync GraphQL Schema *********
+  Schema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      DefinitionS3Location: './schema.graphql'
+
+
+  ApiKey:
+    Type: AWS::AppSync::ApiKey
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: graphQl_lambda_role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: CloudWatchLogsPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: "*"
+
+  #*********** AppSync GraphQL lambda *********
+  AppSyncLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: ./appSync_lambda
+      Description: lambda for graphQL api
+      MemorySize: 512
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      FunctionName: !Sub ${EnvironmentType}_appsync_lambda
+
+  #*********** LambdaDataSource *********
+  LambdaDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Name: 'LambdaDataSource'
+      Type: AWS_LAMBDA
+      ServiceRoleArn: !GetAtt LambdaExecutionRole.Arn
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt AppSyncLambda.Arn
+
+  #*********** Resolver *********
+  GetUserResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      TypeName: 'Query'
+      FieldName: 'getUser'
+      DataSourceName: !GetAtt LambdaDataSource.Name
+      RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke"}'
+      ResponseMappingTemplate: '$util.toJson($ctx.result)'
