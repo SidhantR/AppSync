@@ -101,14 +101,14 @@ Resources:
                   - lambda:InvokeAsync
                 Resource: !GetAtt AppSyncLambda.Arn
 
-  #*********** AppSync GraphQL lambda *********
+  #*********** getUser AppSync GraphQL lambda *********
   AppSyncLambda:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
       Runtime: nodejs18.x
       CodeUri: ./getUser
-      Description: lambda for graphQL api
+      Description: Get user by ID lambda for graphQL api
       MemorySize: 512
       Timeout: 30
       Role:
@@ -117,7 +117,24 @@ Resources:
           - Arn
       FunctionName: !Sub ${EnvironmentType}_appsync_lambda
 
-  #*********** LambdaDataSource *********
+
+  #*********** getAllUser AppSync GraphQL lambda *********
+  getAllUserAppSyncLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: ./getAllUser
+      Description: Get all user lambda for graphQL api
+      MemorySize: 512
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      FunctionName: !Sub ${EnvironmentType}_getAllUser_appsync_lambda
+
+  #*********** getUser LambdaDataSource *********
   LambdaDataSource:
     Type: AWS::AppSync::DataSource
     Properties:
@@ -128,7 +145,7 @@ Resources:
       LambdaConfig:
         LambdaFunctionArn: !GetAtt AppSyncLambda.Arn
 
-  #*********** Resolver *********
+  #*********** getUser Resolver *********
   GetUserResolver:
     Type: AWS::AppSync::Resolver
     Properties:
@@ -136,5 +153,27 @@ Resources:
       TypeName: 'Query'
       FieldName: 'getUser'
       DataSourceName: !GetAtt LambdaDataSource.Name
+      RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke"}'
+      ResponseMappingTemplate: '$util.toJson($ctx.result)'
+
+  #*********** getAllUser LambdaDataSource *********
+  GetAllUserDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Name: 'GetAllUserDataSource'
+      Type: AWS_LAMBDA
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt getAllUserAppSyncLambda.Arn
+
+  #*********** getAllUser Resolver *********
+  GetAllUserResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      TypeName: 'Query'
+      FieldName: 'getAllUsers'
+      DataSourceName: !GetAtt GetAllUserDataSource.Name
       RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke"}'
       ResponseMappingTemplate: '$util.toJson($ctx.result)'
