@@ -1,10 +1,10 @@
 exports.handler = async (query) => {
-    console.log('query by id', query);
+    console.log('type of data',typeof query);
     const {
         arguments : {
         input : { userId }
         }
-    } = query;
+    } = JSON.parse(query);
     return {
         userId: userId,
         username: "Test User",
