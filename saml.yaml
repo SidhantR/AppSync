@@ -99,7 +99,9 @@ Resources:
                 Action: 
                   - lambda:InvokeFunction
                   - lambda:InvokeAsync
-                Resource: !GetAtt AppSyncLambda.Arn
+                Resource: 
+                  - !GetAtt AppSyncLambda.Arn
+                  - !GetAtt getAllUserAppSyncLambda.Arn
 
   #*********** getUser AppSync GraphQL lambda *********
   AppSyncLambda:
