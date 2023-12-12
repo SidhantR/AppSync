@@ -1,4 +1,4 @@
-exports.handler = async (query) => {
+exports.handler = async (parent, query) => {
     console.log('query by id', query);
     return {
         userId: "1",
