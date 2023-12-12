@@ -94,7 +94,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: lambda:invokeFuction
-                Resource: "arn:aws:lambda:${AWS::Region}:*:*"
+                Resource: "*"
  
   #*********** AppSync GraphQL lambda *********
   AppSyncLambda:
