@@ -1,9 +1,8 @@
 exports.handler = async (query) => {
-const userName = query.arguments.input.username;
-const email = query.arguments.input.email;
+const userId = query.arguments.input.userId;
     return {
-        userId: Date.now().toString(),
-        username: userName,
-        email: email
+        userId: userId,
+        username: "test user",
+        email: "test.user@yopmail.com"
     }
 }
