@@ -174,7 +174,7 @@ Resources:
       TypeName: 'Query'
       FieldName: 'getUser'
       DataSourceName: !GetAtt LambdaDataSource.Name
-      RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke"}'
+      RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments) }}'
       ResponseMappingTemplate: '$util.toJson($ctx.result)'
 
   #*********** getAllUser LambdaDataSource *********
@@ -218,6 +218,6 @@ Resources:
       TypeName: 'Mutation'
       FieldName: 'createUser'
       DataSourceName: !GetAtt CreateUserDataSource.Name
-      RequestMappingTemplate: '{ "version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments),"identity":$util.toJson($context.identity) } }'
+      RequestMappingTemplate: '{ "version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments) } }'
       ResponseMappingTemplate: '$util.toJson($ctx.result)'
 
