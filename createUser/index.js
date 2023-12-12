@@ -3,7 +3,7 @@ const email = query.arguments.input.email;
 const userName = query.arguments.input.username;
     return [{
         userId: Date.now().toString(),
-        username: username,
+        username: userName,
         email: email
     }]
 }
