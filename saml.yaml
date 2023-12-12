@@ -22,7 +22,7 @@ Resources:
       Name: MyGraphQLApi
       AuthenticationType: API_KEY
  
- #*********** AppSync GraphQL Schema *********
+  #*********** AppSync GraphQL Schema *********
   Schema:
     Type: AWS::AppSync::GraphQLSchema
     Properties:
@@ -102,6 +102,7 @@ Resources:
                 Resource: 
                   - !GetAtt AppSyncLambda.Arn
                   - !GetAtt getAllUserAppSyncLambda.Arn
+                  - !GetAtt createUserAppSyncLambda.Arn
 
   #*********** getUser AppSync GraphQL lambda *********
   AppSyncLambda:
@@ -135,6 +136,24 @@ Resources:
           - LambdaExecutionRole
           - Arn
       FunctionName: !Sub ${EnvironmentType}_getAllUser_appsync_lambda
+
+
+  #*********** Create User AppSync GraphQL lambda *********
+  createUserAppSyncLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: ./createUser
+      Description: create user lambda for graphQL api
+      MemorySize: 512
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      FunctionName: !Sub ${EnvironmentType}_createuser_appsync_lambda
+
 
   #*********** getUser LambdaDataSource *********
   LambdaDataSource:
@@ -179,3 +198,26 @@ Resources:
       DataSourceName: !GetAtt GetAllUserDataSource.Name
       RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke"}'
       ResponseMappingTemplate: '$util.toJson($ctx.result)'
+
+  #*********** Create User LambdaDataSource *********
+  CreateUserDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Name: 'CreateUserDataSource'
+      Type: AWS_LAMBDA
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt createUserAppSyncLambda.Arn
+
+  #*********** getAllUser Resolver *********
+  CreateUserResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      TypeName: 'Mutation'
+      FieldName: 'createUser'
+      DataSourceName: !GetAtt CreateUserDataSource.Name
+      RequestMappingTemplate: '{ "version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments),"identity":$util.toJson($context.identity) } }'
+      ResponseMappingTemplate: '$util.toJson($ctx.result)'
+

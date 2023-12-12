@@ -11,9 +11,13 @@ input UserInput {
   username: String!
   email: String!
 }
+input UpdateInput {
+  username: String!
+  email: String!
+}
 type Mutation {
-  updateMessage(message: String!): String
-  createUser(userInput: UserInput!): User
+  updateMessage(input: UpdateInput!): User
+  createUser(input: UserInput!): User
 }
 schema {
   query: Query
