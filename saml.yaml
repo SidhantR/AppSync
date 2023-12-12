@@ -67,6 +67,13 @@ Resources:
                   - "dynamodb:PutItem"
                   - "dynamodb:UpdateItem"
                 Resource: "*"
+        - PolicyName: Invokelambda
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource: "*"
 
   #*********** AppSync Role *********
   AppSyncServiceRole:
@@ -87,7 +94,7 @@ Resources:
             Statement:
               - Effect: Allow
                 Action: lambda:invokeFuction
-                Resource: "*"
+                Resource: "arn:aws:lambda:${AWS::Region}:*:*"
  
   #*********** AppSync GraphQL lambda *********
   AppSyncLambda:
