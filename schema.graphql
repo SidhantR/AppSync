@@ -7,6 +7,15 @@ type Query {
   hello: String
   getUser(userId: ID!): User
 }
+input UserInput {
+  username: String!
+  email: String!
+}
+type Mutation {
+  updateMessage(message: String!): String
+  createUser(userInput: UserInput!): User
+}
 schema {
   query: Query
+  mutation: Mutation
 }

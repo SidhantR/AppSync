@@ -57,6 +57,16 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: "*"
+        - PolicyName: DynamoDbPermission
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "dynamodb:Query"
+                  - "dynamodb:PutItem"
+                  - "dynamodb:UpdateItem"
+                Resource: "*"
 
   #*********** AppSync GraphQL lambda *********
   AppSyncLambda:
