@@ -80,26 +80,27 @@ Resources:
 
   #*********** AppSync Role *********
   AppSyncServiceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: App_SyncService_Role
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: appsync.amazonaws.com
-            Action: sts:AssumeRole
-      Policies:
-        - PolicyName: AppSyncServiceRole
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: 
-                  - lambda:InvokeFuction
-                  - lambda:InvokeAsync
-                Resource: !GetAtt AppSyncLambda.Arn
+  Type: AWS::IAM::Role
+  Properties:
+    RoleName: App_SyncService_Role
+    AssumeRolePolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service: appsync.amazonaws.com
+          Action: sts:AssumeRole
+    Policies:
+      - PolicyName: AppSyncServiceRole
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action: 
+                - lambda:InvokeFunction
+                - lambda:InvokeAsync
+              Resource: !GetAtt AppSyncLambda.Arn
+
  
   #*********** AppSync GraphQL lambda *********
   AppSyncLambda:
