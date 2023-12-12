@@ -75,6 +75,7 @@ Resources:
                 Action: 
                   - lambda:InvokeFunction
                   - lambda:InvokeAsync
+                  - appsync:GraphQL
                 Resource: "*"
 
   #*********** AppSync Role *********
@@ -95,7 +96,9 @@ Resources:
             Version: '2012-10-17'
             Statement:
               - Effect: Allow
-                Action: lambda:invokeFuction
+                Action: 
+                  - lambda:InvokeFuction
+                  - lambda:InvokeAsync
                 Resource: "*"
  
   #*********** AppSync GraphQL lambda *********
