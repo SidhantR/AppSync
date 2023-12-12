@@ -1,9 +1,5 @@
 exports.handler = async (query) => {
-    const {
-        arguments : {
-        input : { username, email }
-        }
-    } = JSON.parse(query);
+const email = query.arguments.input.email;
     return [{
         userId: Date.now().toString(),
         username: username,

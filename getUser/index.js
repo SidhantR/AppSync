@@ -1,13 +1,9 @@
 exports.handler = async (query) => {
-    console.log('type of data',typeof query);
-    const {
-        arguments : {
-        input : { userId }
-        }
-    } = JSON.parse(query);
+const userName = query.arguments.input.username;
+const email = query.arguments.input.email;
     return {
-        userId: userId,
-        username: "Test User",
-        email: "test.user@yopmail.com"
+        userId: Date.now().toString(),
+        username: userName,
+        email: email
     }
 }
