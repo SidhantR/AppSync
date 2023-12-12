@@ -107,7 +107,7 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs18.x
-      CodeUri: ./appSync_lambda
+      CodeUri: ./getUser
       Description: lambda for graphQL api
       MemorySize: 512
       Timeout: 30
