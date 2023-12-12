@@ -1,6 +1,6 @@
 exports.handler = async (query) => {
-    console.log('quey', query);
+    console.log('quey');
     return {
-        success: true
+        message: 'hello'
     }
 }

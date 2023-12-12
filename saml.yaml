@@ -68,6 +68,27 @@ Resources:
                   - "dynamodb:UpdateItem"
                 Resource: "*"
 
+  #*********** AppSync Role *********
+  AppSyncServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: graphQl_lambda_role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: appsync.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AppSyncServiceRole
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: lambda:invokeFuction
+                Resource: "*"
+ 
   #*********** AppSync GraphQL lambda *********
   AppSyncLambda:
     Type: AWS::Serverless::Function
@@ -91,7 +112,7 @@ Resources:
       ApiId: !GetAtt GraphQLApi.ApiId
       Name: 'LambdaDataSource'
       Type: AWS_LAMBDA
-      ServiceRoleArn: !GetAtt LambdaExecutionRole.Arn
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
       LambdaConfig:
         LambdaFunctionArn: !GetAtt AppSyncLambda.Arn
 

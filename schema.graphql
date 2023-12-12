@@ -4,7 +4,7 @@ type User {
   email: String
 }
 type Query {
-  hello: String
+  getAllUsers: [User]
   getUser(userId: ID!): User
 }
 input UserInput {
