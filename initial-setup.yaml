@@ -4,7 +4,7 @@ Description: AppSync API
 
 Parameters:
   EnvironmentType:
-    Description: An environment type Develop/QA/Production.
+    Description: An environment type Develop/QA/Production env.
     Type: String
     AllowedValues: [ dev, qa, stg, beta, prd ]
     Default: dev
