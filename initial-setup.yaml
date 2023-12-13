@@ -17,23 +17,9 @@ Resources:
       AttributeDefinitions:
         - AttributeName: userId
           AttributeType: S
-        - AttributeName: username
-          AttributeType: S
-        - AttributeName: email
-          AttributeType: S
-        - AttributeName: address
-          AttributeType: S
-        - AttributeName: processStatus
-          AttributeType: S
-        - AttributeName: assignedDoctor
-          AttributeType: S
-        - AttributeName: hospital
-          AttributeType: S
       KeySchema:
         - AttributeName: userId
           KeyType: HASH
-        - AttributeName: email
-          KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
