@@ -1,9 +1,17 @@
+const DB = require('./dynamodb');
 exports.handler = async (query) => {
-const email = query.arguments.input.email;
-const userName = query.arguments.input.username;
-return {
-        userId: Date.now().toString(),
-        username: userName,
-        email: email
+    try {
+        const email = query.arguments.input.email;
+        const userName = query.arguments.input.username;
+        let obj = {
+            userId: Date.now().toString(),
+            username: userName,
+            email: email
+        }
+        let dbdata = await DB.saveUpdateItem(obj, 'UserTable');
+        console.log('db dasta',dbdata);
+        return obj;
+    } catch (error) {
+        throw error;
     }
 }
