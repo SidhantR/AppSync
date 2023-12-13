@@ -8,7 +8,7 @@ exports.handler = async (query) => {
             username: userName,
             email: email
         }
-        let dbdata = await DB.saveUpdateItem(obj, 'UserTable');
+        let dbdata = await DB.saveUpdateItem(obj, 'dev-UserTable');
         console.log('db dasta',dbdata);
         return obj;
     } catch (error) {
