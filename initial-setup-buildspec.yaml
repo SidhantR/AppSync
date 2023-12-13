@@ -1,0 +1,14 @@
+version: 0.0
+environment_variables:
+    plaintext:
+        "INPUT_FILE": "initial-setup.yaml"
+        "S3_BUCKET": ""
+containers:
+    LambdaFunctions:
+        phases:
+            during_build:
+                commands:
+                    - aws cloudformation package --template $INPUT_FILE --s3-bucket $S3_BUCKET --output-template post-initial-setup.yaml
+        artifacts:
+            files:
+                - post-initial-setup.yaml

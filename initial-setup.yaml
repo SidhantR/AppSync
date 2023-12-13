@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: AppSync API
+
+Parameters:
+  EnvironmentType:
+    Description: An environment type Develop/QA/Production.
+    Type: String
+    AllowedValues: [ dev, qa, stg, beta, prd ]
+    Default: dev
+
+Resources:
+  MyDynamoDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: UserTable
+      AttributeDefinitions:
+        - AttributeName: userId
+          AttributeType: S
+        - AttributeName: username
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+        - AttributeName: address
+          AttributeType: S
+        - AttributeName: processStatus
+          AttributeType: S
+        - AttributeName: assignedDoctor
+          AttributeType: S
+        - AttributeName: hospital
+          AttributeType: S
+      KeySchema:
+        - AttributeName: userId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5

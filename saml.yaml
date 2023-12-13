@@ -29,12 +29,13 @@ Resources:
       ApiId: !GetAtt GraphQLApi.ApiId
       DefinitionS3Location: './schema.graphql'
 
-
+  #*********** Api Key *********
   ApiKey:
     Type: AWS::AppSync::ApiKey
     Properties:
       ApiId: !GetAtt GraphQLApi.ApiId
 
+  #*********** Lambda Execution Lambda Role *********
   LambdaExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -63,9 +64,10 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - "dynamodb:Query"
-                  - "dynamodb:PutItem"
-                  - "dynamodb:UpdateItem"
+                  - dynamodb:Query
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem 
                 Resource: "*"
         - PolicyName: Invokelambda
           PolicyDocument:
@@ -210,7 +212,7 @@ Resources:
       LambdaConfig:
         LambdaFunctionArn: !GetAtt createUserAppSyncLambda.Arn
 
-  #*********** getAllUser Resolver *********
+  #*********** Create User Resolver *********
   CreateUserResolver:
     Type: AWS::AppSync::Resolver
     Properties:

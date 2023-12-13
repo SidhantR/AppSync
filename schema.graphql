@@ -2,6 +2,10 @@ type User {
   userId: ID!
   username: String
   email: String
+  address: String
+  processStatus: String
+  assignedDoctor: String
+  hospital: String
 }
 type Query {
   getAllUsers: [User]
@@ -10,6 +14,10 @@ type Query {
 input UserInput {
   username: String!
   email: String!
+  address: String!
+  processStatus: String!
+  assignedDoctor: String!
+  hospital: String!
 }
 input UpdateInput {
   username: String!
