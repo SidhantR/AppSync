@@ -1,7 +1,7 @@
 
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const CONSTANTS = require('./constant');
-const { DynamoDBDocumentClient, QueryCommand, PutCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { DynamoDBDocumentClient, PutCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 const dbclient = new DynamoDBClient();
 
 const marshallOptions = {

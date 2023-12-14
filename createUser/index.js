@@ -1,16 +1,24 @@
 const DB = require('./dynamodb');
+const CONSTANTS = require('./constant');
 exports.handler = async (query) => {
     try {
-        const email = query.arguments.input.email;
-        const userName = query.arguments.input.username;
-        let obj = {
-            userId: Date.now().toString(),
-            username: userName,
-            email: email
+        const { email, userName, address, assignedDoctor, hospital, processStatus } = query.arguments.input;
+        if (email && CONSTANTS.EMAIL_REGEX.test(email)) {
+            let obj = {
+                userId: Date.now().toString(),
+                username: userName,
+                email: email,
+                address: address,
+                assignedDoctor: assignedDoctor,
+                hospital: hospital,
+                processStatus: processStatus
+            }
+            await DB.saveUpdateItem(obj, CONSTANTS.USER_TABLE);
+            return obj;
         }
-        let dbdata = await DB.saveUpdateItem(obj, 'dev-UserTable');
-        console.log('db dasta',dbdata);
-        return obj;
+        else {
+            throw new Error(CONSTANTS.VALIDATION_MESSAGES.INVALID_EMAIL);
+        }
     } catch (error) {
         throw error;
     }

@@ -1,7 +1,10 @@
+const DB = require('./dynamodb');
+const CONSTANTS = require('./constant');
 exports.handler = async (query) => {
-    return [{
-        userId: "1",
-        username: "Test User",
-        email: "test.user@yopmail.com"
-    }]
+    try {
+        const userData = await DB.scanUserTable();
+        return userData;
+    } catch (error) {
+        throw error;
+    }
 }
