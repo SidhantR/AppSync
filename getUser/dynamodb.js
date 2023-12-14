@@ -24,7 +24,7 @@ exports.getUserData = async (userID) => {
             ':id': userID
         },
         ExpressionAttributeNames: {
-            '#uid': 'userID'
+            '#uid': 'userId'
         }
     };
     const { Items } = await dbClient.send(new QueryCommand(params));

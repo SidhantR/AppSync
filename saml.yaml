@@ -67,7 +67,8 @@ Resources:
                   - dynamodb:Query
                   - dynamodb:PutItem
                   - dynamodb:UpdateItem
-                  - dynamodb:DeleteItem 
+                  - dynamodb:DeleteItem
+                  - dynamodb:Scan 
                 Resource: "*"
         - PolicyName: Invokelambda
           PolicyDocument:

@@ -2,11 +2,11 @@ const DB = require('./dynamodb');
 const CONSTANTS = require('./constant');
 exports.handler = async (query) => {
     try {
-        const { email, userName, address, assignedDoctor, hospital, processStatus } = query.arguments.input;
+        const { email, username, address, assignedDoctor, hospital, processStatus } = query.arguments.input;
         if (email && CONSTANTS.EMAIL_REGEX.test(email)) {
             let obj = {
                 userId: Date.now().toString(),
-                username: userName,
+                username: username,
                 email: email,
                 address: address,
                 assignedDoctor: assignedDoctor,
