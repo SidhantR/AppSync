@@ -16,7 +16,7 @@ const unmarshallOptions = {
 
 const translateConfig = { marshallOptions, unmarshallOptions };
 const dbClient = DynamoDBDocumentClient.from(dbclient, translateConfig);
-exports.scanUserTable = async (search=null,nextPaginationKey) => {
+const scanUserTable = async (search=null,nextPaginationKey) => {
 	let items = [];
 	const params = {
 		TableName: CONSTANTS.USER_TABLE
@@ -34,8 +34,9 @@ exports.scanUserTable = async (search=null,nextPaginationKey) => {
 	const { LastEvaluatedKey, Items } = await dbClient.send(new ScanCommand(params));
 	items = items.concat(Items);
 	if (LastEvaluatedKey) {
-		const data = await scanTable(search=null,LastEvaluatedKey);
+		const data = await scanUserTable(search=null,LastEvaluatedKey);
 		items = items.concat(data);
 	}
 	return items;
 };
+exports.scanUserTable = scanUserTable;

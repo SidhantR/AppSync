@@ -1,8 +1,10 @@
+const DB = require('./dynamodb');
+const CONSTANTS = require('./constant');
 exports.handler = async (query) => {
     try {
-        return {
-            "email":"delete@yopmail.com"
-        }
+        const userId = query.arguments.input.userId;
+        await DB.deleteUser(userId);
+        return { message: 'Successfully Deleted' }
     } catch (error) {
         throw error;
     }
