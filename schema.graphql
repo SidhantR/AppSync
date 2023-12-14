@@ -7,9 +7,10 @@ type User {
   assignedDoctor: String
   hospital: String
 }
+union UserResult = User | [User]
 type Query {
-  getAllUsers: [User]
-  getUser(userId: ID!): User
+  getAllUsers: UserResult
+  getUser(userId: ID!): UserResult
 }
 input UserInput {
   username: String!

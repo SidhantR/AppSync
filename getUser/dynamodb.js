@@ -28,9 +28,9 @@ exports.getUserData = async (userID) => {
         }
     };
     const { Items } = await dbClient.send(new QueryCommand(params));
-    if (Items.length === CONSTANTS.ZERO) {
+    if (Items && Items.length === CONSTANTS.ZERO) {
         return CONSTANTS.FALSE;
     } else {
-        return Items;
+        return Items[0];
     }
 };

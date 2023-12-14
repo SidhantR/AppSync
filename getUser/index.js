@@ -5,7 +5,6 @@ exports.handler = async (query) => {
                 const userId = query.arguments.userId;
                 if (userId) {
                         const userData = await DB.getUserData(userId);
-                        console.log('userData')
                         if (userData) {
                                 return userData;
                         } else {
