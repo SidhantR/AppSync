@@ -19,6 +19,7 @@ input UserInput {
   hospital: String!
 }
 input UpdateInput {
+  userId: String
   username: String
   email: String
   address: String
