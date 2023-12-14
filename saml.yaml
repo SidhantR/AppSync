@@ -106,6 +106,8 @@ Resources:
                   - !GetAtt AppSyncLambda.Arn
                   - !GetAtt getAllUserAppSyncLambda.Arn
                   - !GetAtt createUserAppSyncLambda.Arn
+                  - !GetAtt deleteUserAppSyncLambda.Arn
+                  - !GetAtt updateUserAppSyncLambda.Arn
 
   #*********** getUser AppSync GraphQL lambda *********
   AppSyncLambda:
@@ -157,6 +159,39 @@ Resources:
           - Arn
       FunctionName: !Sub ${EnvironmentType}_createuser_appsync_lambda
 
+  #*********** Delete User AppSync GraphQL lambda *********
+  deleteUserAppSyncLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: ./deleteUser
+      Description: delete user from dynamodb by ID.
+      MemorySize: 512
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      FunctionName: !Sub ${EnvironmentType}_delete_user_appsync_lambda
+
+
+  #*********** Update User AppSync GraphQL lambda *********
+  updateUserAppSyncLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs18.x
+      CodeUri: ./updateUser
+      Description: update user in dynamodb by ID.
+      MemorySize: 512
+      Timeout: 30
+      Role:
+        Fn::GetAtt:
+          - LambdaExecutionRole
+          - Arn
+      FunctionName: !Sub ${EnvironmentType}_update_user_appsync_lambda
+
 
   #*********** getUser LambdaDataSource *********
   LambdaDataSource:
@@ -199,7 +234,7 @@ Resources:
       TypeName: 'Query'
       FieldName: 'getAllUsers'
       DataSourceName: !GetAtt GetAllUserDataSource.Name
-      RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke"}'
+      RequestMappingTemplate: '{"version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments) }}'
       ResponseMappingTemplate: '$util.toJson($ctx.result)'
 
   #*********** Create User LambdaDataSource *********
@@ -224,3 +259,50 @@ Resources:
       RequestMappingTemplate: '{ "version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments) } }'
       ResponseMappingTemplate: '$util.toJson($ctx.result)'
 
+
+  #*********** Delete User LambdaDataSource *********
+  DeleteUserDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Name: 'DeleteUserDataSource'
+      Type: AWS_LAMBDA
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt deleteUserAppSyncLambda.Arn
+
+
+  #*********** Delete User Resolver *********
+  DeleteUserResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      TypeName: 'Mutation'
+      FieldName: 'deleteUser'
+      DataSourceName: !GetAtt DeleteUserDataSource.Name
+      RequestMappingTemplate: '{ "version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments) } }'
+      ResponseMappingTemplate: '$util.toJson($ctx.result)'
+
+
+  #*********** Update User LambdaDataSource *********
+  UpdateUserDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Name: 'UpdateUserDataSource'
+      Type: AWS_LAMBDA
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt updateUserAppSyncLambda.Arn
+
+
+  #*********** Update User Resolver *********
+  UpdateUserResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      TypeName: 'Mutation'
+      FieldName: 'updateUser'
+      DataSourceName: !GetAtt UpdateUserDataSource.Name
+      RequestMappingTemplate: '{ "version": "2017-02-28","operation": "Invoke","payload":{"arguments":$util.toJson($context.arguments) } }'
+      ResponseMappingTemplate: '$util.toJson($ctx.result)'

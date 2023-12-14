@@ -7,10 +7,6 @@ type User {
   assignedDoctor: String
   hospital: String
 }
-type Query {
-  getAllUsers: [User]
-  getUser(userId: ID!): User
-}
 input UserInput {
   username: String!
   email: String!
@@ -20,11 +16,23 @@ input UserInput {
   hospital: String!
 }
 input UpdateInput {
-  username: String!
-  email: String!
+  username: String
+  email: String
+  address: String
+  processStatus: String
+  assignedDoctor: String
+  hospital: String
+}
+input DeleteInput {
+  userId: ID!
+}
+type Query {
+  getAllUsers: [User]
+  getUser(userId: ID!): User
 }
 type Mutation {
-  updateMessage(input: UpdateInput!): User
+  updateUser(input: UpdateInput!): User
+  deleteUser(input: DeleteInput!): User
   createUser(input: UserInput!): User
 }
 schema {
