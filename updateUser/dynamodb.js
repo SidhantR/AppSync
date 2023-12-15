@@ -15,11 +15,11 @@ const unmarshallOptions = {
 
 const translateConfig = { marshallOptions, unmarshallOptions };
 const dbClient = DynamoDBDocumentClient.from(dbclient, translateConfig);
-const updateUser = async (userId,updateUser) => {
+const updateUser = async (updateUser) => {
 	const params = {
 		TableName: CONSTANTS.USER_TABLE,
 		Key: {
-			userId: userId
+			userId: updateUser.userId
 		},
 		UpdateExpression: 'SET email = :email, username = :username, address = :address, processStatus = :processStatus, assignedDoctor = :assignedDoctor, hospital = :hospital',
 		ExpressionAttributeValues: {

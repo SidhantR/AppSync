@@ -1,5 +1,6 @@
 const DB = require('./dynamodb');
 const CONSTANTS = require('./constant');
+const { GraphQLError } = require('graphql');
 exports.handler = async (query) => {
     try {
         const { email, username, address, assignedDoctor, hospital, processStatus } = query.arguments.input;
@@ -17,7 +18,11 @@ exports.handler = async (query) => {
             return obj;
         }
         else {
-            throw new Error(CONSTANTS.VALIDATION_MESSAGES.INVALID_EMAIL);
+            throw new GraphQLError(CONSTANTS.ERRORS.INVALID_EMAIL.MESSAGE, {
+                extensions: {
+                  code: CONSTANTS.ERRORS.INVALID_EMAIL.CODE,
+                },
+            });
         }
     } catch (error) {
         throw error;

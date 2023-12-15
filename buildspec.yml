@@ -8,7 +8,11 @@ containers:
         phases:
             during_build:
                 commands:
-                    - npm install
+                    - cd getUser && npm install
+                    - cd createUser && npm install
+                    - cd deleteUser && npm install
+                    - cd getAllUser && npm install
+                    - cd updateUser && npm install
                     - aws cloudformation package --template $INPUT_FILE --s3-bucket $S3_BUCKET --output-template post-saml.yaml
         artifacts:
             files:

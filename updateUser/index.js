@@ -1,15 +1,13 @@
 const DB = require('./dynamodb');
 const CONSTANTS = require('./constant');
+const { GraphQLError } = require('graphql');
+const Validation = require('./validateInput');
 exports.handler = async (query) => {
     try {
-        const userId = query.arguments.input.userId;
-        if(userId) {
         const obj = query.arguments.input;
-        await DB.updateUser(userId,obj);
+        await Validation(obj);
+        await DB.updateUser(obj);
         return obj;
-        } else {
-            throw new Error('Invalid UserId');
-        }
     } catch (error) {
         throw error;
     }
