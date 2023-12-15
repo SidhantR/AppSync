@@ -5,7 +5,7 @@ const Validation = require('./validateInput');
 exports.handler = async (query) => {
     try {
         const obj = query.arguments.input;
-        await Validation.validateData(obj);
+        Validation.validateData(obj);
         await DB.updateUser(obj);
         return obj;
     } catch (error) {
