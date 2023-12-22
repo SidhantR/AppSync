@@ -15,11 +15,56 @@ Resources:
     Properties:
       TableName: !Sub ${EnvironmentType}-UserTable
       AttributeDefinitions:
-        - AttributeName: userId
+        - AttributeName: pk
           AttributeType: S
+        - AttributeName: sk
+          AttributeType: S
+        - AttributeName: "sk1"
+          AttributeType: "S"
+        - AttributeName: "sk2"
+          AttributeType: "S"
+        - AttributeName: "sk3"
+          AttributeType: "S"
+        - AttributeName: "sk4"
+          AttributeType: "S"
       KeySchema:
-        - AttributeName: userId
+        - AttributeName: pk
           KeyType: HASH
+        - AttributeName: sk
+          KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      LocalSecondaryIndexes:
+        - IndexName: sk1-index
+          KeySchema:
+            - AttributeName: "pk"
+              KeyType: "HASH"
+            - AttributeName: "sk1"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: sk2-index
+          KeySchema:
+            - AttributeName: "pk"
+              KeyType: "HASH"
+            - AttributeName: "sk2"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: sk3-index
+          KeySchema:
+            - AttributeName: "pk"
+              KeyType: "HASH"
+            - AttributeName: "sk3"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
+        - IndexName: sk4-index
+          KeySchema:
+            - AttributeName: "pk"
+              KeyType: "HASH"
+            - AttributeName: "sk4"
+              KeyType: "RANGE"
+          Projection:
+            ProjectionType: "ALL"
