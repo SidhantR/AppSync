@@ -6,6 +6,7 @@ exports.handler = async (query) => {
     try {
         const obj = query.arguments.input;
         Validation.validateData(obj);
+        
         await DB.saveUpdateItem(obj, CONSTANTS.USER_TABLE);
         return obj;
     } catch (error) {
