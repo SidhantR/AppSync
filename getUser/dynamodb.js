@@ -19,12 +19,14 @@ const dbClient = DynamoDBDocumentClient.from(dbclient, translateConfig);
 exports.getUserData = async (userID) => {
     const params = {
         TableName: CONSTANTS.USER_TABLE,
-        KeyConditionExpression: '#uid = :id',
+        KeyConditionExpression: '#pk = :pk AND #sk = :sk',
         ExpressionAttributeValues: {
-            ':id': userID
+            ':sk': userID,
+            ':pk': 'pk#user'
         },
         ExpressionAttributeNames: {
-            '#uid': 'userId'
+            '#pk':'pk',
+            '#sk': 'sk'
         }
     };
     const { Items } = await dbClient.send(new QueryCommand(params));

@@ -1,7 +1,8 @@
 
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const CONSTANTS = require('./constant');
-const { DynamoDBDocumentClient, PutCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
+const { GraphQLError } = require('graphql');
+const { DynamoDBDocumentClient, PutCommand, QueryCommand } = require('@aws-sdk/lib-dynamodb');
 const dbclient = new DynamoDBClient();
 
 const marshallOptions = {
@@ -27,4 +28,29 @@ exports.saveUpdateItem = async (Item, table) => {
         console.log('db err',error);
 		return error;
 	}
+};
+exports.getUserData = async (userEmail) => {
+    const params = {
+        TableName: CONSTANTS.USER_TABLE,
+        IndexName: 'sk1-index',
+        KeyConditionExpression: '#pk = :pk AND #email = :email',
+        ExpressionAttributeValues: {
+            ':email': userEmail,
+            ':pk': 'pk#user'
+        },
+        ExpressionAttributeNames: {
+			'#email': 'sk1',
+			'#pk': 'pk'
+        }
+    };
+    const { Items } = await dbClient.send(new QueryCommand(params));
+    if (Items && Items.length === CONSTANTS.ZERO) {
+        return CONSTANTS.FALSE;
+    } else {
+		throw new GraphQLError(CONSTANTS.ERRORS.USER_EXIST.MESSAGE, {
+            extensions: {
+              code: CONSTANTS.ERRORS.USER_EXIST.CODE,
+            }
+        });
+    }
 };

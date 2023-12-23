@@ -43,6 +43,12 @@ exports.validateData = (data)=>{
               code: CONSTANTS.ERRORS.INVALID_HOSPITAL.CODE,
             }
         });
+    } else if(data.username.length > CONSTANTS.MAX || data.username.length < CONSTANTS.MIN) {
+        throw new GraphQLError(CONSTANTS.ERRORS.INVALID_USER_NAME_LENGTH.MESSAGE, {
+            extensions: {
+              code: CONSTANTS.ERRORS.INVALID_USER_NAME_LENGTH.CODE,
+            }
+        });
     }
 
 }

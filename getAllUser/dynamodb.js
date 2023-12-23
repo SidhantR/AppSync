@@ -18,20 +18,26 @@ const translateConfig = { marshallOptions, unmarshallOptions };
 const dbClient = DynamoDBDocumentClient.from(dbclient, translateConfig);
 const scanUserTable = async (search=null,nextPaginationKey) => {
 	let items = [];
-	const params = {
-		TableName: CONSTANTS.USER_TABLE
-	};
-	if(search) {
-		params['FilterExpression'] = 'assignedDoctor = :value'
-		params['ExpressionAttributeValues'] = {
-			':value': search,
-		}
+    const params = {
+        TableName: CONSTANTS.USER_TABLE,
+        KeyConditionExpression: '#pk = :pk',
+        ExpressionAttributeValues: {
+            ':pk': 'pk#user'
+        },
+        ExpressionAttributeNames: {
+			'#pk': 'pk'
+        }
+    };
+    if(search) {
+		params['IndexName'] = 'sk2-index'
+		params['ExpressionAttributeNames']['#sk2'] = 'sk2'
+		params['ExpressionAttributeValues'][':sk2'] = search,
+		 params['KeyConditionExpression']= '#pk = :pk AND #sk2 = :sk2'
 	}
 	if (typeof nextPaginationKey !== 'undefined') {
 		params.ExclusiveStartKey = nextPaginationKey;
 	}
-
-	const { LastEvaluatedKey, Items } = await dbClient.send(new ScanCommand(params));
+    const {LastEvaluatedKey, Items } = await dbClient.send(new QueryCommand(params));
 	items = items.concat(Items);
 	if (LastEvaluatedKey) {
 		const data = await scanUserTable(search=null,LastEvaluatedKey);
