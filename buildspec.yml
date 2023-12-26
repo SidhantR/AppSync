@@ -9,7 +9,7 @@ containers:
             during_build:
                 commands:
                     - cd utils && mkdir -p nodejs/node_modules/utils && mv index.js constant.js package.json nodejs/node_modules/utils
-                    - cd nodejs/node_modules/utils && npm install
+                    - cd utils/nodejs/node_modules/utils && npm install
                     - aws cloudformation package --template $INPUT_FILE --s3-bucket $S3_BUCKET --output-template post-saml.yaml
         artifacts:
             files:
