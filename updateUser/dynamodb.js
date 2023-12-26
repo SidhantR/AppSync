@@ -20,7 +20,7 @@ const updateUser = async (updateUser) => {
 	const params = {
 		TableName: CONSTANTS.USER_TABLE,
 		Key: {
-			pk:'pk#user',
+			pk:CONSTANTS.USER,
 			sk: updateUser.userId
 		},
 		UpdateExpression: 'SET sk1 = :email, email = :email, sk4 = :username, username = :username, address = :address, processStatus = :processStatus, sk2 = :assignedDoctor, assignedDoctor = :assignedDoctor, sk3 = :hospital, hospital = :hospital',
@@ -44,7 +44,7 @@ const getUserById = async (userID) => {
         KeyConditionExpression: '#pk = :pk AND #sk = :sk',
         ExpressionAttributeValues: {
             ':sk': userID,
-            ':pk': 'pk#user'
+            ':pk': 'user'
         },
         ExpressionAttributeNames: {
             '#pk':'pk',
@@ -67,7 +67,7 @@ const getUserData = async (userEmail,userId) => {
         KeyConditionExpression: '#pk = :pk AND #email = :email',
         ExpressionAttributeValues: {
             ':email': userEmail,
-            ':pk': 'pk#user'
+            ':pk': CONSTANTS.USER
         },
         ExpressionAttributeNames: {
 			'#email': 'sk1',

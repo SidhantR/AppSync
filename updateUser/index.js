@@ -4,7 +4,7 @@ const Validation = require('./validateInput');
 exports.handler = async (query) => {
     try {
         const obj = query.arguments.input;
-        obj.pk = 'pk#user'
+        obj.pk = CONSTANTS.USER
         obj.userId = obj.userId;
         Validation.validateData(obj);
         obj.sk =  obj.userId;

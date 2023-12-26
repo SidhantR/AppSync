@@ -22,7 +22,7 @@ exports.getUserData = async (userID) => {
         KeyConditionExpression: '#pk = :pk AND #sk = :sk',
         ExpressionAttributeValues: {
             ':sk': userID,
-            ':pk': 'pk#user'
+            ':pk': CONSTANTS.USER
         },
         ExpressionAttributeNames: {
             '#pk':'pk',

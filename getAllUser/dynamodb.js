@@ -22,7 +22,7 @@ const scanUserTable = async (search=null,nextPaginationKey) => {
         TableName: CONSTANTS.USER_TABLE,
         KeyConditionExpression: '#pk = :pk',
         ExpressionAttributeValues: {
-            ':pk': 'pk#user'
+            ':pk': CONSTANTS.USER
         },
         ExpressionAttributeNames: {
 			'#pk': 'pk'

@@ -5,6 +5,7 @@ const MAX=20, MIN =2;
 exports.ZERO = 0;
 exports.MAX = MAX;
 exports.MIN = MIN;
+exports.USER = 'user'
 exports.ERRORS = {
 	USER_ID_REQUIRED: {
 		CODE: 'USER_ID_REQUIRED',

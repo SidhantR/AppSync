@@ -19,7 +19,7 @@ const deleteUser = async (userId) => {
 	const params = {
 		TableName: CONSTANTS.USER_TABLE,
 		Key: {
-			pk:'pk#user',
+			pk:CONSTANTS.USER,
 			sk: userId
 		}
 	};
