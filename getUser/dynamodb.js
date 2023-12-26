@@ -1,21 +1,6 @@
-
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const CONSTANTS = require('./constant');
-const { DynamoDBDocumentClient, QueryCommand } = require('@aws-sdk/lib-dynamodb');
-const dbclient = new DynamoDBClient();
+const utils = require('utils')
 
-const marshallOptions = {
-    convertEmptyValues: CONSTANTS.FALSE,
-    removeUndefinedValues: CONSTANTS.TRUE,
-    convertClassInstanceToMap: CONSTANTS.FALSE
-};
-
-const unmarshallOptions = {
-    wrapNumbers: CONSTANTS.FALSE
-};
-
-const translateConfig = { marshallOptions, unmarshallOptions };
-const dbClient = DynamoDBDocumentClient.from(dbclient, translateConfig);
 exports.getUserData = async (userID) => {
     const params = {
         TableName: CONSTANTS.USER_TABLE,
@@ -29,7 +14,7 @@ exports.getUserData = async (userID) => {
             '#sk': 'sk'
         }
     };
-    const { Items } = await dbClient.send(new QueryCommand(params));
+    const { Items } = await utils.queryData(params);
     if (Items && Items.length === CONSTANTS.ZERO) {
         return CONSTANTS.FALSE;
     } else {

@@ -1,6 +1,5 @@
 const DB = require('./dynamodb');
 const CONSTANTS = require('./constant');
-const { GraphQLError } = require('graphql');
 const Validation = require('./validateInput');
 exports.handler = async (query) => {
     try {

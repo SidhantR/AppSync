@@ -35,6 +35,16 @@ Resources:
     Properties:
       ApiId: !GetAtt GraphQLApi.ApiId
 
+  #*******Create the layer*******
+  utilslayer:
+    Properties:
+      LayerName: !Sub ${EnvironmentType}_utils
+      ContentUri: ./utils
+      CompatibleRuntimes:
+        - nodejs18.x
+      RetentionPolicy: Delete
+    Type: AWS::Serverless::LayerVersion
+
   #*********** Lambda Execution Lambda Role *********
   LambdaExecutionRole:
     Type: AWS::IAM::Role
@@ -123,6 +133,8 @@ Resources:
           - LambdaExecutionRole
           - Arn
       FunctionName: !Sub ${EnvironmentType}_appsync_lambda
+      Layers:
+        - !Ref utilslayer
 
 
   #*********** getAllUser AppSync GraphQL lambda *********
@@ -140,6 +152,8 @@ Resources:
           - LambdaExecutionRole
           - Arn
       FunctionName: !Sub ${EnvironmentType}_getAllUser_appsync_lambda
+      Layers:
+        - !Ref utilslayer
 
 
   #*********** Create User AppSync GraphQL lambda *********
@@ -157,6 +171,8 @@ Resources:
           - LambdaExecutionRole
           - Arn
       FunctionName: !Sub ${EnvironmentType}_createuser_appsync_lambda
+      Layers:
+        - !Ref utilslayer
 
   #*********** Delete User AppSync GraphQL lambda *********
   deleteUserAppSyncLambda:
@@ -173,6 +189,8 @@ Resources:
           - LambdaExecutionRole
           - Arn
       FunctionName: !Sub ${EnvironmentType}_delete_user_appsync_lambda
+      Layers:
+        - !Ref utilslayer
 
 
   #*********** Update User AppSync GraphQL lambda *********
@@ -190,6 +208,8 @@ Resources:
           - LambdaExecutionRole
           - Arn
       FunctionName: !Sub ${EnvironmentType}_update_user_appsync_lambda
+      Layers:
+        - !Ref utilslayer
 
 
   #*********** getUser LambdaDataSource *********

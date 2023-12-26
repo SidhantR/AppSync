@@ -1,21 +1,6 @@
 const CONSTANTS = require('./constant');
-const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
-const { GraphQLError } = require('graphql');
-const { DynamoDBDocumentClient, UpdateCommand, QueryCommand} = require('@aws-sdk/lib-dynamodb');
-const dbclient = new DynamoDBClient();
+const utils = require('utils')
 
-const marshallOptions = {
-    convertEmptyValues: CONSTANTS.FALSE,
-    removeUndefinedValues: CONSTANTS.TRUE,
-    convertClassInstanceToMap: CONSTANTS.FALSE
-};
-
-const unmarshallOptions = {
-    wrapNumbers: CONSTANTS.FALSE
-};
-
-const translateConfig = { marshallOptions, unmarshallOptions };
-const dbClient = DynamoDBDocumentClient.from(dbclient, translateConfig);
 const updateUser = async (updateUser) => {
 	const params = {
 		TableName: CONSTANTS.USER_TABLE,
@@ -36,7 +21,7 @@ const updateUser = async (updateUser) => {
 		ReturnValues: 'UPDATED_NEW'
 	};
     console.log('update params', params);
-	return dbClient.send(new UpdateCommand(params));
+    return utils.updateData(params)
 };
 const getUserById = async (userID) => {
     const params = {
@@ -51,7 +36,7 @@ const getUserById = async (userID) => {
             '#sk': 'sk'
         }
     };
-    const { Items } = await dbClient.send(new QueryCommand(params));
+    const { Items } = await utils.queryData(params);
     if (Items && Items.length === CONSTANTS.ZERO) {
         return CONSTANTS.FALSE;
     } else {
@@ -74,24 +59,16 @@ const getUserData = async (userEmail,userId) => {
 			'#pk': 'pk'
         }
     };
-    const { Items } = await dbClient.send(new QueryCommand(params));
+    const { Items } = await utils.queryData(params);
     if (Items && Items.length === CONSTANTS.ZERO) {
         return CONSTANTS.FALSE;
     } else {
 		if(checkUser.email!=userEmail) {
-		throw new GraphQLError(CONSTANTS.ERRORS.USER_EXIST.MESSAGE, {
-            extensions: {
-              code: CONSTANTS.ERRORS.USER_EXIST.CODE,
-            }
-        });
+            utils.graphQlError(CONSTANTS.ERRORS.USER_EXIST)
 	}
     }
 } else {
-	throw new GraphQLError(CONSTANTS.ERRORS.USER_NOT_EXIST.MESSAGE, {
-		extensions: {
-		  code: CONSTANTS.ERRORS.USER_NOT_EXIST.CODE,
-		}
-	});
+        utils.graphQlError(CONSTANTS.ERRORS.USER_NOT_EXIST)
 }
 };
 exports.updateUser = updateUser;

@@ -1,5 +1,6 @@
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb');
 const CONSTANTS = require('./constant');
+const { GraphQLError } = require('graphql');
 const { DynamoDBDocumentClient, PutCommand, QueryCommand, UpdateCommand } = require('@aws-sdk/lib-dynamodb');
 const dbclient = new DynamoDBClient();
 
@@ -30,4 +31,12 @@ exports.deleteData = async (params) => {
 
 exports.updateData = async (params) => {
     return dbClient.send(new UpdateCommand(params))
+}
+
+exports.graphQlError = (ERROR) => {
+    throw new GraphQLError(ERROR.MESSAGE, {
+        extensions: {
+            code: ERROR.CODE,
+        }
+    });
 }
